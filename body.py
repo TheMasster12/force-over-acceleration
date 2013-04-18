@@ -20,8 +20,6 @@ class Body(object):
             " with mass: " + str(self.mass))
   
   def forceOn(self,other):
-    print str(self)
-    print str(other)
     G = 6.674e-11
     r = self.vectorTo(other)
     d = r.length()

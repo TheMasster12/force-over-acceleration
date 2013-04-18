@@ -42,9 +42,15 @@ def simulate_test():
   bodyArray.append(body.Body(500,500,0,5.972e24,vector.Vector(0,0,0)))
   bodyArray.append(body.Body(500,500,1000,1,vector.Vector(0,0,0)))
   
+  print(str(bodyArray[0]))
+  print(str(bodyArray[1]))
+
   for x in xrange(0,NUM_CYCLES):
     bodyArray[0].interactWith(bodyArray[1])
     bodyArray[1].interactWith(bodyArray[0])
+
+  print(str(bodyArray[0]))
+  print(str(bodyArray[1]))
 
   return
 
