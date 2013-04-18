@@ -32,7 +32,7 @@ def simulate():
 
   for x in xrange(0,NUM_CYCLES):
     for i in range(0, len(bodyArray)):
-      for j in range(i,len(bodyArray)):
+      for j in range(i+1,len(bodyArray)):
         bodyArray[i].interactWith(bodyArray[j])
     #paint
   return

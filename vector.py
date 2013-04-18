@@ -9,7 +9,9 @@ class Vector(object):
     self.z = z
 
   def __str__(self):
-    return "<" + self.x + ", " + self.y + ", " + self.z + ">"
+    return ("<" + str(self.x) + ", " + 
+                  str(self.y) + ", " +
+                  str(self.z) + ">")
   
   def length(self):
     return math.sqrt(self.x*self.x + self.y*self.y + self.z*self.z)
@@ -31,7 +33,7 @@ def toVector(b):
 
 # Adds vectors v1 and v2
 def add(v1,v2):
-  return vector(v1.x+v2.x, v1.y+v2.y, v1.z+v2.z)
+  return Vector(v1.x+v2.x, v1.y+v2.y, v1.z+v2.z)
 
 # Dot product of v1 and v2
 def dotprod(v1,v2):

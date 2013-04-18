@@ -13,10 +13,15 @@ class Body(object):
     self.velocity = v # should be a Vector
 
   def __str__(self):
-    return ("Body at:(" + self.x + ", " + self.y + ", " + self.z + ")"
-            + " with mass: " + self.mass)
+    return ("Body at:(" + 
+            str(self.x) + ", " + 
+            str(self.y) + ", " + 
+            str(self.z) + ")" + 
+            " with mass: " + str(self.mass))
   
   def forceOn(self,other):
+    print str(self)
+    print str(other)
     G = 6.674e-11
     r = self.vectorTo(other)
     d = r.length()
@@ -24,11 +29,11 @@ class Body(object):
     return r.normalize().scale(F)
   
   def interactWith(self,other):
-    accel = self.forceOn(other).scale(1/self.m).scale(CYCLE_TIME)
+    accel = self.forceOn(other).scale(1/self.mass).scale(CYCLE_TIME)
     self.velocity = vector.add(self.velocity, accel)
     self.x += (self.velocity.x * CYCLE_TIME)
     self.y += (self.velocity.y * CYCLE_TIME)
-    self.z += (Self.velocity.z * CYCLE_TIME)
+    self.z += (self.velocity.z * CYCLE_TIME)
 
   def vectorTo(self,other):
     return vector.Vector(other.x-self.x, other.y-self.y, other.z-self.z)
