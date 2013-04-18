@@ -9,9 +9,10 @@ DIM_Z = 1000
 MASS_MIN = 1e-6
 MASS_MAX = 1e-3
 VELOCITY_MIN = 1e-2 
-VELOCITY_MAX = 100 
+VELOCITY_MAX = 100
+NUM_CYCLES = 10000;
 
-def run_simulation():
+def simulate():
   #start graphics
 
   bodyArray = []
@@ -23,9 +24,11 @@ def run_simulation():
     ranVelocity = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
     bodyArray.append(body.Body(ranX,ranY,ranZ,ranMass,ranVelocity))
 
-  for i in range(0, bodyArray.length):
-    for j in range(i, bodyArray.length):
-      bodyArray[i].interactWith(bodyArray[j])
-
-  #paint
+  for x in range(0,NUM_CYCLES):
+    for i in range(0, bodyArray.length):
+      for j in range(i, bodyArray.length):
+        bodyArray[i].interactWith(bodyArray[j])
+    #paint
   return
+
+simulate()
