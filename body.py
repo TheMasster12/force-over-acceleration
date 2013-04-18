@@ -17,11 +17,11 @@ class Body(object):
             + " with mass: " + self.mass)
   
   def interactWith(other):
-    change_in_velocity = forceOn(self,other).scale(1/self.m).scale(CYCLE_TIME)
-    self.velocity = self.velocity.add(self.velocity,change_in_velocity)
-    x = x + (self.velocity.x * CYCLE_TIME);
-    y = y + (self.velocity.y * CYCLE_TIME);
-    z = z + (Self.velocity.z * CYCLE_TIME);
+    accel = forceOn(self,other).scale(1/self.m).scale(CYCLE_TIME)
+    self.velocity = vector.add(self.velocity, accel)
+    self.x += (self.velocity.x * CYCLE_TIME)
+    self.y += (self.velocity.y * CYCLE_TIME)
+    self.z += (Self.velocity.z * CYCLE_TIME)
 
   def vectorTo(self,other):
     return vector.Vector(other.x-self.x, other.y-self.y, other.z-self.z)
