@@ -29,17 +29,19 @@ def simulate():
 
     bodyArray.append(body.Body(ranX,ranY,ranZ,ranMass,ranVelocity))
   
+  print("Pre-Simulation:")
   for x in xrange(0,NUM_BODIES):
-		print(str(bodyArray[x])
-	
-	  for i in xrange(0, len(bodyArray)):
-			for j in xrange(i+1,len(bodyArray)):
-				bodyArray[i].interactWith(bodyArray[j])
-	
-	for x in xrange(0,NUM_BODIES):
-		print(str(bodyArray[x])
+    print(str(bodyArray[x]))
+
+    for i in xrange(0, len(bodyArray)):
+      for j in xrange(i+1,len(bodyArray)):
+        bodyArray[i].interactWith(bodyArray[j])
   
-	return
+  print("\nPost-Simulation:")
+  for x in xrange(0,NUM_BODIES):
+    print(str(bodyArray[x]))
+
+  return
 
 def simulate_test():
   bodyArray = []
@@ -67,4 +69,4 @@ def simulate_test():
 
 if __name__ == '__main__':
   #simulate_test()
-	simulate()
+  simulate()
