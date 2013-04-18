@@ -40,7 +40,7 @@ def simulate():
 def simulate_test():
   bodyArray = []
   bodyArray.append(body.Body(500,500,0,5.972e24,vector.Vector(0,0,0)))
-  bodyArray.append(body.Body(500,500,1000,1,vector.Vector(0,0,0)))
+  bodyArray.append(body.Body(500,500,6.371e6,1,vector.Vector(0,0,0)))
   
   print(str(bodyArray[0]))
   print(str(bodyArray[1]))

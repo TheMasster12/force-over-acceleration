@@ -23,8 +23,8 @@ class Body(object):
     G = 6.674e-11
     r = self.vectorTo(other)
     d = r.length()
-    F = G * self.mass * other.mass / (d*d)
-    return r.normalize().scale(F)
+    F = G * self.mass * other.mass / (d*d*d)
+    return r.scale(F)
   
   def interactWith(self,other):
     accel = self.forceOn(other).scale(1/self.mass).scale(CYCLE_TIME)
