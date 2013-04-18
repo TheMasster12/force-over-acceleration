@@ -7,13 +7,12 @@ class Vector(object):
     self.x = x
     self.y = y
     self.z = z
-    return self
 
   def __str__(self):
     return "<" + self.x + ", " + self.y + ", " + self.z + ">"
   
   def length(self):
-    return math.sqrt(x*x + y*y + z*z)
+    return math.sqrt(self.x*self.x + self.y*self.y + self.z*self.z)
   
   def scale(self,c):
     self.x *= c

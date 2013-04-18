@@ -1,6 +1,7 @@
 #This class will be the backbone of the whole simulation.
 import random
 import body
+import vector
 
 NUM_BODIES = 100
 DIM_X = 1000
@@ -25,7 +26,7 @@ def simulate():
     ranVx = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
     ranVy = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
     ranVz = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
-    ranVelocity = Vector(ranVx,ranVy,ranVz)
+    ranVelocity = vector.Vector(ranVx,ranVy,ranVz)
 
     bodyArray.append(body.Body(ranX,ranY,ranZ,ranMass,ranVelocity))
 

@@ -16,8 +16,15 @@ class Body(object):
     return ("Body at:(" + self.x + ", " + self.y + ", " + self.z + ")"
             + " with mass: " + self.mass)
   
-  def interactWith(other):
-    accel = forceOn(self,other).scale(1/self.m).scale(CYCLE_TIME)
+  def forceOn(self,other):
+    G = 6.674e-11
+    r = self.vectorTo(other)
+    d = r.length()
+    F = G * self.mass * other.mass / (d*d)
+    return r.normalize().scale(F)
+  
+  def interactWith(self,other):
+    accel = self.forceOn(other).scale(1/self.m).scale(CYCLE_TIME)
     self.velocity = vector.add(self.velocity, accel)
     self.x += (self.velocity.x * CYCLE_TIME)
     self.y += (self.velocity.y * CYCLE_TIME)
@@ -25,14 +32,6 @@ class Body(object):
 
   def vectorTo(self,other):
     return vector.Vector(other.x-self.x, other.y-self.y, other.z-self.z)
-
-  # returns the force on self by the other, as a vector in the direction
-  def forceOn(self,other):
-    G = 6.674e-11
-    r = self.vectorTo(other)
-    d = r.length()
-    F = G * self.mass * other.mass / (d*d)
-    return r.normalize().scale(F)
 
 def distance(p1,p2):
   x = p1.x - p2.x
