@@ -21,7 +21,12 @@ def simulate():
     ranY = random.random() * DIM_Y
     ranZ = random.random() * DIM_Z
     ranMass = random.uniform(MASS_MIN,MASS_MAX)
-    ranVelocity = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
+
+    ranVx = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
+    ranVy = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
+    ranVz = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
+    ranVelocity = Vector(ranVx,ranVy,ranVz)
+
     bodyArray.append(body.Body(ranX,ranY,ranZ,ranMass,ranVelocity))
 
   for x in xrange(0,NUM_CYCLES):
