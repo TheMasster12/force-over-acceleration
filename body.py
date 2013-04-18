@@ -1,5 +1,7 @@
 import vector
 
+CYCLE_TIME = 1e-3 #1 millisecond
+
 #This class will represent a point-particle and all the goodness therein
 class Body(object):
 
@@ -13,15 +15,18 @@ class Body(object):
   def __str__(self):
     return ("Body at:(" + self.x + ", " + self.y + ", " + self.z + ")"
             + " with mass: " + self.mass)
-
-  def kineticEnergy():
-    return 0.5 * self.mass * self.velocity.length() * self.velocity.length()
+  
+  def interactWith(other):
+    change_in_velocity = forceOn(self,other).scale(1/self.m).scale(CYCLE_TIME)
+    self.velocity = self.velocity.add(self.velocity,change_in_velocity)
+    x = x + (self.velocity.x * CYCLE_TIME);
+    y = y + (self.velocity.y * CYCLE_TIME);
+    z = z + (Self.velocity.z * CYCLE_TIME);
 
   def vectorTo(self,other):
     return vector.Vector(other.x-self.x, other.y-self.y, other.z-self.z)
 
   # returns the force on self by the other, as a vector in the direction
-  # self --> other
   def forceOn(self,other):
     G = 6.674e-11
     r = self.vectorTo(other)
