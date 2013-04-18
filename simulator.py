@@ -16,7 +16,7 @@ def simulate():
   #start graphics
 
   bodyArray = []
-  for x in range(0,NUM_BODIES):
+  for x in xrange(0,NUM_BODIES):
     ranX = random.random() * DIM_X
     ranY = random.random() * DIM_Y
     ranZ = random.random() * DIM_Z
@@ -24,11 +24,12 @@ def simulate():
     ranVelocity = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
     bodyArray.append(body.Body(ranX,ranY,ranZ,ranMass,ranVelocity))
 
-  for x in range(0,NUM_CYCLES):
-    for i in range(0, bodyArray.length):
-      for j in range(i, bodyArray.length):
+  for x in xrange(0,NUM_CYCLES):
+    for i in range(0, len(bodyArray)):
+      for j in range(i,len(bodyArray)):
         bodyArray[i].interactWith(bodyArray[j])
     #paint
   return
 
-simulate()
+if __name__ == '__main__':
+  simulate()
