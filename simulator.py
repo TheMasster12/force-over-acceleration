@@ -11,7 +11,7 @@ MASS_MIN = 1e-6
 MASS_MAX = 1e-3
 VELOCITY_MIN = 1e-2 
 VELOCITY_MAX = 100
-NUM_CYCLES = 10000;
+NUM_CYCLES = 2000;
 
 def simulate():
   #start graphics
@@ -37,5 +37,17 @@ def simulate():
     #paint
   return
 
+def simulate_test():
+  bodyArray = []
+  bodyArray.append(body.Body(500,500,0,5.972e24,vector.Vector(0,0,0)))
+  bodyArray.append(body.Body(500,500,1000,1,vector.Vector(0,0,0)))
+  
+  for x in xrange(0,NUM_CYCLES):
+    bodyArray[0].interactWith(bodyArray[1])
+    bodyArray[1].interactWith(bodyArray[0])
+
+  return
+
 if __name__ == '__main__':
-  simulate()
+  #simulate()
+  simulate_test()
