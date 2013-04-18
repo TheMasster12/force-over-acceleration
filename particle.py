@@ -10,5 +10,9 @@ class Particle(object):
     self.mass = m
     self.velocity = v # should be a Vector
 
+  def __str__(self):
+    return ("Particle at:(" + self.x + ", " + self.y + ", " + self.z + ")"
+            + " with mass: " + self.mass)
+
   def kineticEnergy():
     return 0.5 * self.mass * self.velocity.length() * self.velocity.length()
