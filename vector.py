@@ -29,3 +29,11 @@ class Vector(object):
 
 def toVector(b):
   return vector(b.x, b.y, b.z)
+
+# Adds vectors v1 and v2
+def add(v1,v2):
+  return vector(v1.x+v2.x, v1.y+v2.y, v1.z+v2.z)
+
+# Dot product of v1 and v2
+def dotprod(v1,v2):
+  return v1.x*v2.x + v1.y*v2.y + v1.z*v2.z
