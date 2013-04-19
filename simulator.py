@@ -53,7 +53,6 @@ def displayFun():
 
   for i in xrange(0,NUM_BODIES):
     glVertex2f(bodyArray[i].x,bodyArray[i].y)
-    glVertex2f(bodyArray[i].x + 10.0,bodyArray[i].y + 10.0)
 
   glEnd()
   glFlush()
