@@ -8,11 +8,11 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
 NUM_BODIES = 100
-DIM_X = 1000
-DIM_Y = 1000
-DIM_Z = 1000
+DIM_X = 2000
+DIM_Y = 2000
+DIM_Z = 2000
 MASS_MIN = 1e14
-MASS_MAX = 1e15
+MASS_MAX = 1e16
 VELOCITY_MIN = 1e-2 
 VELOCITY_MAX = 100
 bodyArray = []
@@ -43,7 +43,10 @@ def simulateFrame():
 def initFun():
   glClearColor(1.0,1.0,1.0,0.0)
   glColor3f(0.0,0.0,0.0)
-  glPointSize(10.0)
+  glEnable(GL_POINT_SPRITE)
+  glEnable(GL_POINT_SMOOTH)
+  glEnable(GL_BLEND)
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
   glMatrixMode(GL_PROJECTION)
   glLoadIdentity()
   gluOrtho2D(0.0,1000.0,0.0,1000.0)
@@ -52,12 +55,13 @@ def displayFun():
   simulateFrame()
 
   glClear(GL_COLOR_BUFFER_BIT)
-  glBegin(GL_POINTS)
 
   for b in bodyArray:
+    glPointSize(b.mass * 1e-15)
+    glBegin(GL_POINTS)
     glVertex2f(b.x,b.y)
+    glEnd()
 
-  glEnd()
   glFlush()
 
 def simulate_test():
