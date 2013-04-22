@@ -18,7 +18,19 @@ class Body(object):
             str(self.y) + ", " + 
             str(self.z) + ")" + 
             " with mass: " + str(self.mass))
+
+  def __eq__(self,other):
+    return (isinstance (other, self.__class__) and
+            self.x == other.x and
+            self.y == other.y and
+            self.z == other.z and
+            self.mass == other.mass and
+            self.velocity == other.velocity)
+
+  def __ne__(self,other):
+    return not self.__eq__(other)
   
+  # Returns the force on self by other
   def forceOn(self,other):
     G = 6.674e-11
     r = self.vectorTo(other)
@@ -27,8 +39,22 @@ class Body(object):
     return r.scale(F)
   
   def interactWith(self,other):
-    accel = self.forceOn(other).scale(1/self.mass).scale(CYCLE_TIME)
+    accel = self.forceOn(other).scale(1.0/self.mass).scale(CYCLE_TIME)
     self.velocity = vector.add(self.velocity, accel)
+    self.x += (self.velocity.x * CYCLE_TIME)
+    self.y += (self.velocity.y * CYCLE_TIME)
+    self.z += (self.velocity.z * CYCLE_TIME)
+
+  def totalForceOn(self, bodies):
+    F = vector.zero()
+    for b in bodies:
+      if b != self:
+        F = vector.add(F, self.forceOn(b))
+    return F
+
+  def move(self, force):
+    deltaV = force.scale(1.0/self.mass)
+    self.velocity = vector.add(self.velocity, deltaV)
     self.x += (self.velocity.x * CYCLE_TIME)
     self.y += (self.velocity.y * CYCLE_TIME)
     self.z += (self.velocity.z * CYCLE_TIME)

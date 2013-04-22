@@ -13,6 +13,15 @@ class Vector(object):
                   str(self.y) + ", " +
                   str(self.z) + ">")
   
+  def __eq__(self,other):
+    return (isinstance (other, self.__class__) and
+            self.x == other.x and
+            self.y == other.y and
+            self.z == other.z)
+
+  def __ne__(self,other):
+    return not self.__eq__(other)
+
   def length(self):
     return math.sqrt(self.x*self.x + self.y*self.y + self.z*self.z)
   
@@ -28,8 +37,11 @@ class Vector(object):
     self.z *= self.length()
     return self
 
+def zero():
+  return Vector(0,0,0)
+
 def toVector(b):
-  return vector(b.x, b.y, b.z)
+  return Vector(b.x, b.y, b.z)
 
 # Adds vectors v1 and v2
 def add(v1,v2):

@@ -7,34 +7,38 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
-NUM_BODIES = 10 
+NUM_BODIES = 100
 DIM_X = 1000
 DIM_Y = 1000
 DIM_Z = 1000
-MASS_MIN = 1e-6
-MASS_MAX = 1e-3
+MASS_MIN = 1e14
+MASS_MAX = 1e15
 VELOCITY_MIN = 1e-2 
 VELOCITY_MAX = 100
 bodyArray = []
 
 def generateBodies():
-  for x in xrange(0,NUM_BODIES):
+  for x in xrange(NUM_BODIES):
     ranX = random.random() * DIM_X
     ranY = random.random() * DIM_Y
     ranZ = random.random() * DIM_Z
     ranMass = random.uniform(MASS_MIN,MASS_MAX)
-
+    
+    '''
     ranVx = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
     ranVy = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
     ranVz = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
     ranVelocity = vector.Vector(ranVx,ranVy,ranVz)
+    '''
+
+    ranVelocity = vector.zero()
 
     bodyArray.append(body.Body(ranX,ranY,ranZ,ranMass,ranVelocity))
   
 def simulateFrame():  
-  for i in xrange(0, len(bodyArray)):
-    for j in xrange(i+1,len(bodyArray)):
-      bodyArray[i].interactWith(bodyArray[j])
+  forces = [x.totalForceOn(bodyArray) for x in bodyArray]
+  for i in xrange(len(bodyArray)):
+    bodyArray[i].move(forces[i])
 
 def initFun():
   glClearColor(1.0,1.0,1.0,0.0)
@@ -50,8 +54,8 @@ def displayFun():
   glClear(GL_COLOR_BUFFER_BIT)
   glBegin(GL_POINTS)
 
-  for i in xrange(0,NUM_BODIES):
-    glVertex2f(bodyArray[i].x,bodyArray[i].y)
+  for b in bodyArray:
+    glVertex2f(b.x,b.y)
 
   glEnd()
   glFlush()
