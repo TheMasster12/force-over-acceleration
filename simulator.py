@@ -1,5 +1,6 @@
 #This class will be the backbone of the whole simulation.
-import random
+import random,math
+
 import body
 import vector
 
@@ -8,9 +9,9 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
 NUM_BODIES = 100
-DIM_X = 2000
-DIM_Y = 2000
-DIM_Z = 2000
+DIM_X = 1000
+DIM_Y = 1000
+DIM_Z = 1000
 MASS_MIN = 1e14
 MASS_MAX = 1e16
 VELOCITY_MIN = 1e-2 
@@ -57,7 +58,7 @@ def displayFun():
   glClear(GL_COLOR_BUFFER_BIT)
 
   for b in bodyArray:
-    glPointSize(b.mass * 1e-15)
+    glPointSize(math.log(b.mass * 1e-14,2) * 2)
     glBegin(GL_POINTS)
     glVertex2f(b.x,b.y)
     glEnd()
