@@ -38,9 +38,15 @@ def generateBodies():
     ranVelocity = vector.zero()
 
     #bodyArray.append(body.Body(ranX,ranY,ranZ,ranMass,ranVelocity))
-  v = 2500
-  bodyArray.append(body.Body(400, 0, 0, 1e17, vector.Vector(0, v, 0)))
-  bodyArray.append(body.Body(-400, 0, 0, 1e17, vector.Vector(0, -1 * v, 0)))
+  v = 300
+  m = 1e15
+  d = 900
+  bodyArray.append(body.Body(d, 0, 0, m, vector.Vector(0, v, 0)))
+  bodyArray.append(body.Body(-d, 0, 0, m, vector.Vector(0, -v, 0)))
+  bodyArray.append(body.Body(0, d, 0, m, vector.Vector(0, 0, v)))
+  bodyArray.append(body.Body(0, -d, 0, m, vector.Vector(0, 0, -v)))
+  bodyArray.append(body.Body(0, 0, d, m, vector.Vector(v, 0, 0)))
+  bodyArray.append(body.Body(0, 0, -d, m, vector.Vector(-v, 0, 0)))
   
 def simulateFrame():  
   forces = [x.totalForceOn(bodyArray) for x in bodyArray] # Force on each body
