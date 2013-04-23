@@ -70,18 +70,31 @@ def initFun():
   glEnable(GL_POINT_SMOOTH)
   glEnable(GL_BLEND)
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-  
-  orientCamera()
 
-def orientCamera():
   # First, load up the perspective.
   glMatrixMode(GL_PROJECTION)
   glLoadIdentity()
-  gluPerspective(60.0, 1.0, 0.1, CAM_DISTANCE * 3)
+  gluPerspective(60.0, 1.0, 0.1, CAM_DISTANCE * 30)
+ 
+  orientCamera()
 
-  # Now, position the camera where it must be
+def orientCamera():
   glMatrixMode(GL_MODELVIEW)
+  glLoadIdentity()
   gluLookAt(0.0, 0.0, CAM_DISTANCE, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
+
+def begin2D(withDepthTest):
+  glMatrixMode(GL_PROJECTION)
+  glPushMatrix()
+  glLoadIdentity()
+  glOrtho(0, 1000, 0, 1000, 0, 1)
+  glMatrixMode(GL_MODELVIEW)
+  glLoadIdentity()
+
+def end2D():
+  glMatrixMode(GL_PROJECTION)
+  glPopMatrix()
+  orientCamera()
 
 def display():
   global frameCount,frameTimeHolder,avgFrameTime
@@ -107,15 +120,18 @@ def display():
       avgStr = "Average  : " + str(avgFrameTime) + " s"
     bodStr = "Bodies   : " + str(len(bodyArray))
     timStr = "Time     : " + str(int(round(time.time() - startTime))) + " s"
+
+    begin2D(False)
     glColor3f(1.0, 0.0, 0.0)
-    glRasterPos2f(-DIM_X * .80, DIM_Y * .80)
+    glRasterPos2f(20,80)
     glutBitmapString(GLUT_BITMAP_9_BY_15, fpsStr)
-    glRasterPos2f(-DIM_X * .80, DIM_Y * .80 - 100)
+    glRasterPos2f(20,60)
     glutBitmapString(GLUT_BITMAP_9_BY_15, avgStr)
-    glRasterPos2f(-DIM_X * .80, DIM_Y * .80 - 200)
+    glRasterPos2f(20,40)
     glutBitmapString(GLUT_BITMAP_9_BY_15, bodStr)
-    glRasterPos2f(-DIM_X * .80, DIM_Y * .80 - 300)
+    glRasterPos2f(20,20)
     glutBitmapString(GLUT_BITMAP_9_BY_15, timStr)
+    end2D()
 
   glFlush() # Finish all drawing before this line
 
@@ -169,14 +185,12 @@ def handleMouse(button, state, x, y):
   # Uncomment lines below to play with zooming
   if button == 3:
     if state == GLUT_DOWN:
-      print("Scrolled up")
-      #CAM_DISTANCE *= 0.98
-      #orientCamera()
+      if CAM_DISTANCE > 200: CAM_DISTANCE -= 200
+      orientCamera()
   if button == 4:
     if state == GLUT_DOWN:
-      print("Scrolled down")
-      #CAM_DISTANCE *= 1.02
-      #orientCamera()
+      CAM_DISTANCE += 200
+      orientCamera()
 
 if __name__ == '__main__':
   #Initialize GLUT
