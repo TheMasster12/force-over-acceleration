@@ -9,13 +9,16 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
 NUM_BODIES = 100
-DIM_X = 1000
-DIM_Y = 1000
-DIM_Z = 1000
+DIM_X = 2000
+DIM_Y = 2000
+DIM_Z = 2000
 MASS_MIN = 1e14
 MASS_MAX = 1e16
 VELOCITY_MIN = 1e-2 
 VELOCITY_MAX = 100
+
+CAM_DISTANCE = max([DIM_X,DIM_Y,DIM_Z]) * 1.5
+
 bodyArray = []
 
 def generateBodies():
@@ -28,7 +31,7 @@ def generateBodies():
     '''
     ranVx = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
     ranVy = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
-    ranVz = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
+    ranVz = random.uniform(VELOCITY_MIN,VE100LOCITY_MAX)
     ranVelocity = vector.Vector(ranVx,ranVy,ranVz)
     '''
 
@@ -37,28 +40,32 @@ def generateBodies():
     bodyArray.append(body.Body(ranX,ranY,ranZ,ranMass,ranVelocity))
   
 def simulateFrame():  
-  forces = [x.totalForceOn(bodyArray) for x in bodyArray]
+  forces = [x.totalForceOn(bodyArray) for x in bodyArray] # Force on each body
   for i in xrange(len(bodyArray)):
     bodyArray[i].move(forces[i])
 
 def initFun():
+  # Clear the canvas
   glClearColor(0.0,0.0,0.0,0.0)
   glColor3f(1.0,1.0,1.0)
+
+  # Make things look nice
   glEnable(GL_POINT_SPRITE)
   glEnable(GL_POINT_SMOOTH)
   glEnable(GL_BLEND)
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-  #glMatrixMode(GL_PROJECTION)
+
+  # First, load up the perspective.
   glMatrixMode(GL_PROJECTION)
   glLoadIdentity()
-  #glOrtho(0.0,1000.0,0.0,1000.0, -10000.0,500.0)
-  gluPerspective(60.0, 1.0, 0.1, 3000.0)
+  gluPerspective(60.0, 1.0, 0.1, CAM_DISTANCE * 3)
+
+  # Now, position the camera where it must be
   glMatrixMode(GL_MODELVIEW)
-  gluLookAt(0.0, 0.0, 2000.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
+  gluLookAt(0.0, 0.0, CAM_DISTANCE, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
 
 def displayFun():
   simulateFrame()
-
   glClear(GL_COLOR_BUFFER_BIT)
 
   for b in bodyArray:
@@ -79,7 +86,7 @@ def simulate_test():
   print(str(bodyArray[1]))
   print(str(bodyArray[2]))
 
-  for x in xrange(0,NUM_CYCLES):
+  for x in xrange(NUM_CYCLES):
     bodyArray[0].interactWith(bodyArray[1])
     bodyArray[1].interactWith(bodyArray[0])
     bodyArray[0].interactWith(bodyArray[2])
