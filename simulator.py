@@ -61,8 +61,13 @@ def simulateFrame():
   for i in xrange(len(bodyArray)):
     bodyArray[i].move(forces[i],avgFrameTime)
 
+def barycenter():
+  vs = [vector.Vector(b.x,b.y,b.z).scale(b.mass) for b in bodyArray]
+  totalMass = sum([b.mass for b in bodyArray])
+  x = reduce(vector.add, vs)
+  return x.scale(1.0/totalMass)
+
 def initFun():
-  # Clear the canvas
   glClearColor(0.0,0.0,0.0,0.0)
 
   # Make things look nice
@@ -83,7 +88,7 @@ def orientCamera():
   glLoadIdentity()
   gluLookAt(0.0, 0.0, CAM_DISTANCE, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
 
-def begin2D(withDepthTest):
+def begin2D():
   glMatrixMode(GL_PROJECTION)
   glPushMatrix()
   glLoadIdentity()
@@ -96,12 +101,7 @@ def end2D():
   glPopMatrix()
   orientCamera()
 
-def display():
-  global frameCount,frameTimeHolder,avgFrameTime
-  simulateFrame()
-  glClear(GL_COLOR_BUFFER_BIT)
-
-  # Render bodies
+def displayBodies():
   glMatrixMode(GL_MODELVIEW)
   glColor3f(1.0, 1.0, 1.0)
   for b in bodyArray:
@@ -110,7 +110,7 @@ def display():
     glutSolidSphere(math.log(b.mass * 1e-14, 2) * 2, 20,20)
     glPopMatrix()
 
-  # Show render data on screen
+def displayData():
   if showData:
     if avgFrameTime == 0:
       fpsStr = "Framerate: N/A"
@@ -120,9 +120,12 @@ def display():
       avgStr = "Average  : " + str(avgFrameTime) + " s"
     bodStr = "Bodies   : " + str(len(bodyArray))
     timStr = "Time     : " + str(int(round(time.time() - startTime))) + " s"
+    cenStr = "Center   : " + str(barycenter())
 
-    begin2D(False)
+    begin2D()
     glColor3f(1.0, 0.0, 0.0)
+    glRasterPos2f(20,100)
+    glutBitmapString(GLUT_BITMAP_9_BY_15, cenStr)
     glRasterPos2f(20,80)
     glutBitmapString(GLUT_BITMAP_9_BY_15, fpsStr)
     glRasterPos2f(20,60)
@@ -133,6 +136,14 @@ def display():
     glutBitmapString(GLUT_BITMAP_9_BY_15, timStr)
     end2D()
 
+def display():
+  global frameCount,frameTimeHolder,avgFrameTime
+  simulateFrame()
+  glClear(GL_COLOR_BUFFER_BIT)
+
+  displayBodies() # Render bodies
+  displayData() # Show render data on screen
+  
   glFlush() # Finish all drawing before this line
 
   # Update render data
@@ -165,8 +176,8 @@ def handleKeypress(key,x,y):
     startTime = time.time()
 
     # Uncomment to play with zooming
-    #CAM_DISTANCE = initialCameraDistance
-    #orientCamera()
+    CAM_DISTANCE = initialCameraDistance
+    orientCamera()
 
     refreshBodyArray()
 
