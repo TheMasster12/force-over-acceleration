@@ -21,6 +21,8 @@ bodyArray = []
 frameCount = 0
 frameTimeHolder= int(round(time.time() * 1000))
 avgFrameTime = 0
+dispTime = 0
+showData = True
 
 def generateRandomBodies():
   global bodyArray
@@ -43,7 +45,7 @@ def generateRandomBodies():
 def readBodies(args):
   global bodyArray
   for arg in args:
-    b = [float(x) for x in arg.split()]
+    b = [float(x) for x in arg.split()] # List of numbers that identify body
     v = vector.Vector(b[4], b[5], b[6])
     bodyArray.append(body.Body(b[0], b[1], b[2], b[3], v))
 
@@ -56,7 +58,6 @@ def simulateFrame():
 def initFun():
   # Clear the canvas
   glClearColor(0.0,0.0,0.0,0.0)
-  glColor3f(1.0,1.0,1.0)
 
   # Make things look nice
   glEnable(GL_POINT_SPRITE)
@@ -74,24 +75,38 @@ def initFun():
   gluLookAt(0.0, 0.0, CAM_DISTANCE, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
 
 def displayFun():
-  global bodyArray,frameCount,frameTimeHolder,avgFrameTime
+  global bodyArray,frameCount,frameTimeHolder,avgFrameTime,dispTime
   simulateFrame()
   glClear(GL_COLOR_BUFFER_BIT)
 
+  # Render bodies
+  glMatrixMode(GL_MODELVIEW)
+  glColor3f(1.0, 1.0, 1.0)
   for b in bodyArray:
     glPushMatrix()
     glTranslate(b.x,b.y,b.z)
     glutSolidSphere(math.log(b.mass * 1e-14, 2) * 2, 20,20)
     glPopMatrix()
 
-  glFlush()
+  # Show render data on screen
+  if showData and dispTime != 0:
+    fpsStr = "Framerate: " + str(1.0/dispTime) + " fps"
+    avgStr = "Average  : " + str(dispTime) + " s"
+    glColor3f(1.0, 0.0, 0.0)
+    glRasterPos2f(-DIM_X * .80, DIM_Y * .80)
+    glutBitmapString(GLUT_BITMAP_9_BY_15, fpsStr)
+    glRasterPos2f(-DIM_X * .80, DIM_Y * .80 - 100)
+    glutBitmapString(GLUT_BITMAP_9_BY_15, avgStr)
 
+  glFlush() # Finish all drawing before this line
+
+  # Update render data
   frameCount += 1
   if frameCount % 10 == 0:
     lastTenFramesTime = int(round(time.time() * 1000.0)) - frameTimeHolder
     avgFrameTime = lastTenFramesTime / 10000.0
-    print("Framerate: " + str(1.0/avgFrameTime) + "fps")
-    print("AvgFrameTime: " + str(avgFrameTime) + "s\n")
+    if frameCount % 100 == 0:
+      dispTime = lastTenFramesTime / 10000.0
     frameTimeHolder = int(round(time.time() * 1000.0)) 
 
 def refreshBodyArray():
@@ -104,10 +119,14 @@ def refreshBodyArray():
     readBodies(sys.stdin.readlines())
 
 def handleKeypress(key,x,y):
+  global showData
+
   if key == 'q':
     sys.exit(0)
   if key == 'r':
     refreshBodyArray()
+  if key == 'f':
+    showData = not showData
 
 if __name__ == '__main__':
   #Initialize GLUT
