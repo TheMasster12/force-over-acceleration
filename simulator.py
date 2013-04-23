@@ -42,8 +42,8 @@ def simulateFrame():
     bodyArray[i].move(forces[i])
 
 def initFun():
-  glClearColor(1.0,1.0,1.0,0.0)
-  glColor3f(0.0,0.0,0.0)
+  glClearColor(0.0,0.0,0.0,0.0)
+  glColor3f(1.0,1.0,1.0)
   glEnable(GL_POINT_SPRITE)
   glEnable(GL_POINT_SMOOTH)
   glEnable(GL_BLEND)
