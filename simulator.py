@@ -20,9 +20,9 @@ bodyArray = []
 
 def generateBodies():
   for x in xrange(NUM_BODIES):
-    ranX = random.random() * DIM_X
-    ranY = random.random() * DIM_Y
-    ranZ = random.random() * DIM_Z
+    ranX = random.random() * DIM_X - (DIM_X / 2)
+    ranY = random.random() * DIM_Y - (DIM_X / 2)
+    ranZ = random.random() * DIM_Z - (DIM_X / 2)
     ranMass = random.uniform(MASS_MIN,MASS_MAX)
     
     '''
@@ -48,9 +48,13 @@ def initFun():
   glEnable(GL_POINT_SMOOTH)
   glEnable(GL_BLEND)
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+  #glMatrixMode(GL_PROJECTION)
   glMatrixMode(GL_PROJECTION)
   glLoadIdentity()
-  gluOrtho2D(0.0,1000.0,0.0,1000.0)
+  #glOrtho(0.0,1000.0,0.0,1000.0, -10000.0,500.0)
+  gluPerspective(60.0, 1.0, 0.1, 3000.0)
+  glMatrixMode(GL_MODELVIEW)
+  gluLookAt(0.0, 0.0, 2000.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
 
 def displayFun():
   simulateFrame()
@@ -58,10 +62,10 @@ def displayFun():
   glClear(GL_COLOR_BUFFER_BIT)
 
   for b in bodyArray:
-    glPointSize(math.log(b.mass * 1e-14,2) * 2)
-    glBegin(GL_POINTS)
-    glVertex2f(b.x,b.y)
-    glEnd()
+    glPushMatrix()
+    glTranslate(b.x,b.y,b.z)
+    glutSolidSphere(math.log(b.mass * 1e-14, 2) * 2, 20,20)
+    glPopMatrix()
 
   glFlush()
 
