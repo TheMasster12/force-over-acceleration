@@ -1,7 +1,5 @@
 import vector
 
-CYCLE_TIME = 1e-3 #1 millisecond
-
 #This class will represent a point-particle and all the goodness therein
 class Body(object):
 
@@ -38,13 +36,6 @@ class Body(object):
     F = G * self.mass * other.mass / (d*d*d)
     return r.scale(F)
   
-  def interactWith(self,other):
-    accel = self.forceOn(other).scale(1.0/self.mass).scale(CYCLE_TIME)
-    self.velocity = vector.add(self.velocity, accel)
-    self.x += (self.velocity.x * CYCLE_TIME)
-    self.y += (self.velocity.y * CYCLE_TIME)
-    self.z += (self.velocity.z * CYCLE_TIME)
-
   def totalForceOn(self, bodies):
     F = vector.zero()
     for b in bodies:
@@ -52,12 +43,12 @@ class Body(object):
         F = vector.add(F, self.forceOn(b))
     return F
 
-  def move(self, force):
+  def move(self, force, time):
     deltaV = force.scale(1.0/self.mass)
     self.velocity = vector.add(self.velocity, deltaV)
-    self.x += (self.velocity.x * CYCLE_TIME)
-    self.y += (self.velocity.y * CYCLE_TIME)
-    self.z += (self.velocity.z * CYCLE_TIME)
+    self.x += (self.velocity.x * time)
+    self.y += (self.velocity.y * time)
+    self.z += (self.velocity.z * time)
 
   def vectorTo(self,other):
     return vector.Vector(other.x-self.x, other.y-self.y, other.z-self.z)

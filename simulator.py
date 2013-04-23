@@ -20,6 +20,7 @@ CAM_DISTANCE = max([DIM_X,DIM_Y,DIM_Z]) * 1.5
 bodyArray = []
 frameCount = 0
 frameTimeHolder= int(round(time.time() * 1000))
+avgFrameTime = 0
 
 def generateRandomBodies():
   global bodyArray
@@ -47,10 +48,11 @@ def readBodies(args):
     bodyArray.append(body.Body(b[0], b[1], b[2], b[3], v))
 
 def simulateFrame(): 
-  global bodyArray
+  global bodyArray,avgFrameTime
+  print(avgFrameTime)
   forces = [x.totalForceOn(bodyArray) for x in bodyArray]
   for i in xrange(len(bodyArray)):
-    bodyArray[i].move(forces[i])
+    bodyArray[i].move(forces[i],avgFrameTime)
 
 def initFun():
   # Clear the canvas
@@ -73,7 +75,7 @@ def initFun():
   gluLookAt(0.0, 0.0, CAM_DISTANCE, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
 
 def displayFun():
-  global bodyArray,frameCount,frameTimeHolder
+  global bodyArray,frameCount,frameTimeHolder,avgFrameTime
   simulateFrame()
   glClear(GL_COLOR_BUFFER_BIT)
 
@@ -87,8 +89,11 @@ def displayFun():
 
   frameCount += 1
   if frameCount % 10 == 0:
-    print(1.0 / ((int(round(time.time() * 1000)) - frameTimeHolder) / 10000.0))
-    frameTimeHolder = int(round(time.time() * 1000)) 
+    lastTenFramesTime = int(round(time.time() * 1000.0)) - frameTimeHolder
+    avgFrameTime = lastTenFramesTime / 10000.0
+    print(avgFrameTime)
+    print(1.0 / avgFrameTime)
+    frameTimeHolder = int(round(time.time() * 1000.0)) 
 
 def refreshBodyArray():
   global bodyArray
