@@ -12,8 +12,8 @@ DIM_Y = 2000
 DIM_Z = 2000
 MASS_MIN = 1e14
 MASS_MAX = 1e16
-VELOCITY_MIN = 1e-2 
-VELOCITY_MAX = 100
+VELOCITY_MIN = -10000 
+VELOCITY_MAX = 10000
 
 CAM_DISTANCE = max([DIM_X,DIM_Y,DIM_Z]) * 1.5
 
@@ -32,7 +32,7 @@ def generateRandomBodies():
     '''
     ranVx = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
     ranVy = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
-    ranVz = random.uniform(VELOCITY_MIN,VE100LOCITY_MAX)
+    ranVz = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
     ranVelocity = vector.Vector(ranVx,ranVy,ranVz)
     '''
     ranVelocity = vector.zero()
@@ -48,7 +48,7 @@ def readBodies(args):
 
 def simulateFrame(): 
   global bodyArray
-  forces = [x.totalForceOn(bodyArray) for x in bodyArray] # Force on each body
+  forces = [x.totalForceOn(bodyArray) for x in bodyArray]
   for i in xrange(len(bodyArray)):
     bodyArray[i].move(forces[i])
 
@@ -90,13 +90,23 @@ def displayFun():
     print(1.0 / ((int(round(time.time() * 1000)) - frameTimeHolder) / 10000.0))
     frameTimeHolder = int(round(time.time() * 1000)) 
 
+def refreshBodyArray():
+  global bodyArray
+  bodyArray = []
+
+  if len(sys.argv) < 2:
+    generateRandomBodies()
+  else:
+    readBodies(sys.stdin.readlines())
+
 def handleKeypress(key,x,y):
   if key == 'q':
     sys.exit(0)
   if key == 'r':
-    print("restart")
+    refreshBodyArray()
 
 if __name__ == '__main__':
+  #Initialize GLUT
   glutInit()
   glutInitWindowSize(1000,1000)
   glutCreateWindow("Force-Over-Acceleration")
@@ -105,10 +115,7 @@ if __name__ == '__main__':
   glutDisplayFunc(displayFun)
   glutIdleFunc(displayFun) #Im pretty sure this is wrong
 
-  if len(sys.argv) < 2:
-    generateRandomBodies()
-  else:
-    readBodies(sys.stdin.readlines())
-
+  #Initialize everything else
+  refreshBodyArray()
   initFun()
   glutMainLoop()
