@@ -12,8 +12,8 @@ DIM_Y = 2000
 DIM_Z = 2000
 MASS_MIN = 1e14
 MASS_MAX = 1e16
-VELOCITY_MIN = -10000 
-VELOCITY_MAX = 10000
+VELOCITY_MIN = -1e4 
+VELOCITY_MAX = 1e4
 
 CAM_DISTANCE = max([DIM_X,DIM_Y,DIM_Z]) * 1.5
 
@@ -23,6 +23,7 @@ frameTimeHolder = int(round(time.time() * 1000))
 avgFrameTime = 0
 showData = True
 startTime = time.time()
+argHolder = [] 
 
 def generateRandomBodies():
   for x in xrange(NUM_BODIES):
@@ -55,7 +56,6 @@ def readBodies(args):
     bodyArray.append(body.Body(b[0], b[1], b[2], b[3], v))
 
 def simulateFrame(): 
-  global bodyArray,avgFrameTime
   forces = [x.totalForceOn(bodyArray) for x in bodyArray]
   for i in xrange(len(bodyArray)):
     bodyArray[i].move(forces[i],avgFrameTime)
@@ -129,7 +129,7 @@ def refreshBodyArray():
   if len(sys.argv) < 2:
     generateRandomBodies()
   else:
-    readBodies(sys.stdin.readlines())
+    readBodies(argHolder)
 
 def handleKeypress(key,x,y):
   global showData, startTime, frameCount, avgFrameTime, frameTimeHolder
@@ -164,6 +164,8 @@ if __name__ == '__main__':
   glutIdleFunc(display)
 
   #Initialize everything else
+  if len(sys.argv) >= 2:
+    argHolder = sys.stdin.readlines()
   refreshBodyArray()
   initFun()
   glutMainLoop()
