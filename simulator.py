@@ -28,22 +28,27 @@ startTime = time.time()
 totalTime = 0
 
 def generateRandomBodies():
-  global bodyArray
   for x in xrange(NUM_BODIES):
-    ranX = random.random() * DIM_X - (DIM_X / 2)
-    ranY = random.random() * DIM_Y - (DIM_Y / 2)
-    ranZ = random.random() * DIM_Z - (DIM_Z / 2)
-    ranMass = random.uniform(MASS_MIN,MASS_MAX)
+    addRandomBody()
 
-    '''
-    ranVx = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
-    ranVy = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
-    ranVz = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
-    ranVelocity = vector.Vector(ranVx,ranVy,ranVz)
-    '''
-    ranVelocity = vector.zero()
+def addRandomBody():
+  global bodyArray
+  ranX = random.random() * DIM_X - (DIM_X / 2)
+  ranY = random.random() * DIM_Y - (DIM_Y / 2)
+  ranZ = random.random() * DIM_Z - (DIM_Z / 2)
+  ranMass = random.uniform(MASS_MIN,MASS_MAX)
+  '''
+  ranVx = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
+  ranVy = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
+  ranVz = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
+  ranVelocity = vector.Vector(ranVx,ranVy,ranVz)
+  '''
+  ranVelocity = vector.zero()
+  bodyArray.append(body.Body(ranX,ranY,ranZ,ranMass,ranVelocity))
 
-    bodyArray.append(body.Body(ranX,ranY,ranZ,ranMass,ranVelocity))
+def removeBody():
+  global bodyArray
+  del bodyArray[random.randint(0,len(bodyArray) - 1)]
 
 def readBodies(args):
   global bodyArray
@@ -137,6 +142,10 @@ def handleKeypress(key,x,y):
     refreshBodyArray()
   if key == 'f':
     showData = not showData
+  if key == 'n':
+    addRandomBody()
+  if key == 'd':
+    removeBody()
 
 if __name__ == '__main__':
   #Initialize GLUT
