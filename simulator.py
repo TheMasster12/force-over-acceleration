@@ -16,6 +16,7 @@ VELOCITY_MIN = -1e4
 VELOCITY_MAX = 1e4
 
 CAM_DISTANCE = max([DIM_X,DIM_Y,DIM_Z]) * 1.5
+initialCameraDistance = CAM_DISTANCE
 
 bodyArray = []
 frameCount = 0
@@ -69,7 +70,10 @@ def initFun():
   glEnable(GL_POINT_SMOOTH)
   glEnable(GL_BLEND)
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+  
+  orientCamera()
 
+def orientCamera():
   # First, load up the perspective.
   glMatrixMode(GL_PROJECTION)
   glLoadIdentity()
@@ -133,6 +137,7 @@ def refreshBodyArray():
 
 def handleKeypress(key,x,y):
   global showData, startTime, frameCount, avgFrameTime, frameTimeHolder
+  global CAM_DISTANCE
 
   if key == 'q':
     sys.exit(0)
@@ -142,6 +147,11 @@ def handleKeypress(key,x,y):
     avgFrameTime = 0
     frameTimeHolder = int(round(time.time() * 1000.0))
     startTime = time.time()
+
+    # Uncomment to play with zooming
+    #CAM_DISTANCE = initialCameraDistance
+    #orientCamera()
+
     refreshBodyArray()
 
   if key == 'f':
@@ -153,6 +163,21 @@ def handleKeypress(key,x,y):
   if key == 'd':
     removeBody()
 
+def handleMouse(button, state, x, y):
+  global CAM_DISTANCE
+
+  # Uncomment lines below to play with zooming
+  if button == 3:
+    if state == GLUT_DOWN:
+      print("Scrolled up")
+      #CAM_DISTANCE *= 0.98
+      #orientCamera()
+  if button == 4:
+    if state == GLUT_DOWN:
+      print("Scrolled down")
+      #CAM_DISTANCE *= 1.02
+      #orientCamera()
+
 if __name__ == '__main__':
   #Initialize GLUT
   glutInit()
@@ -160,6 +185,7 @@ if __name__ == '__main__':
   glutCreateWindow("Force-Over-Acceleration")
   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB)
   glutKeyboardFunc(handleKeypress)
+  glutMouseFunc(handleMouse)
   glutDisplayFunc(display)
   glutIdleFunc(display)
 
