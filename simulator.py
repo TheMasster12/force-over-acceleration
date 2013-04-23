@@ -19,13 +19,10 @@ CAM_DISTANCE = max([DIM_X,DIM_Y,DIM_Z]) * 1.5
 
 bodyArray = []
 frameCount = 0
-frameTimeHolder= int(round(time.time() * 1000))
+frameTimeHolder = int(round(time.time() * 1000))
 avgFrameTime = 0
-dispTime = 0
 showData = True
-
 startTime = time.time()
-totalTime = 0
 
 def generateRandomBodies():
   for x in xrange(NUM_BODIES):
@@ -82,8 +79,8 @@ def initFun():
   glMatrixMode(GL_MODELVIEW)
   gluLookAt(0.0, 0.0, CAM_DISTANCE, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
 
-def displayFun():
-  global frameCount,frameTimeHolder,avgFrameTime,dispTime
+def display():
+  global frameCount,frameTimeHolder,avgFrameTime
   simulateFrame()
   glClear(GL_COLOR_BUFFER_BIT)
 
@@ -97,9 +94,13 @@ def displayFun():
     glPopMatrix()
 
   # Show render data on screen
-  if showData and dispTime != 0:
-    fpsStr = "Framerate: " + str(1.0/dispTime) + " fps"
-    avgStr = "Average  : " + str(dispTime) + " s"
+  if showData:
+    if avgFrameTime == 0:
+      fpsStr = "Framerate: N/A"
+      avgStr = "Average  : N/A"
+    else:
+      fpsStr = "Framerate: " + str(1.0/avgFrameTime) + " fps"
+      avgStr = "Average  : " + str(avgFrameTime) + " s"
     bodStr = "Bodies   : " + str(len(bodyArray))
     timStr = "Time     : " + str(int(round(time.time() - startTime))) + " s"
     glColor3f(1.0, 0.0, 0.0)
@@ -116,12 +117,9 @@ def displayFun():
 
   # Update render data
   frameCount += 1
-
   if frameCount % 10 == 0:
     lastTenFramesTime = int(round(time.time() * 1000.0)) - frameTimeHolder
     avgFrameTime = lastTenFramesTime / 10000.0
-    if frameCount % 100 == 0:
-      dispTime = lastTenFramesTime / 10000.0
     frameTimeHolder = int(round(time.time() * 1000.0)) 
 
 def refreshBodyArray():
@@ -134,16 +132,24 @@ def refreshBodyArray():
     readBodies(sys.stdin.readlines())
 
 def handleKeypress(key,x,y):
-  global showData
+  global showData, startTime, frameCount, avgFrameTime, frameTimeHolder
 
   if key == 'q':
     sys.exit(0)
+
   if key == 'r':
+    frameCount = 0
+    avgFrameTime = 0
+    frameTimeHolder = int(round(time.time() * 1000.0))
+    startTime = time.time()
     refreshBodyArray()
+
   if key == 'f':
     showData = not showData
+
   if key == 'n':
     addRandomBody()
+
   if key == 'd':
     removeBody()
 
@@ -154,8 +160,8 @@ if __name__ == '__main__':
   glutCreateWindow("Force-Over-Acceleration")
   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB)
   glutKeyboardFunc(handleKeypress)
-  glutDisplayFunc(displayFun)
-  glutIdleFunc(displayFun) #Im pretty sure this is wrong
+  glutDisplayFunc(display)
+  glutIdleFunc(display)
 
   #Initialize everything else
   refreshBodyArray()
