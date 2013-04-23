@@ -21,7 +21,7 @@ CAM_DISTANCE = max([DIM_X,DIM_Y,DIM_Z]) * 1.5
 
 bodyArray = []
 
-def generateBodies():
+def generateRandomBodies():
   for x in xrange(NUM_BODIES):
     ranX = random.random() * DIM_X - (DIM_X / 2)
     ranY = random.random() * DIM_Y - (DIM_Y / 2)
@@ -37,17 +37,14 @@ def generateBodies():
 
     ranVelocity = vector.zero()
 
-    #bodyArray.append(body.Body(ranX,ranY,ranZ,ranMass,ranVelocity))
-  v = 300
-  m = 1e15
-  d = 900
-  bodyArray.append(body.Body(d, 0, 0, m, vector.Vector(0, v, 0)))
-  bodyArray.append(body.Body(-d, 0, 0, m, vector.Vector(0, -v, 0)))
-  bodyArray.append(body.Body(0, d, 0, m, vector.Vector(0, 0, v)))
-  bodyArray.append(body.Body(0, -d, 0, m, vector.Vector(0, 0, -v)))
-  bodyArray.append(body.Body(0, 0, d, m, vector.Vector(v, 0, 0)))
-  bodyArray.append(body.Body(0, 0, -d, m, vector.Vector(-v, 0, 0)))
+    bodyArray.append(body.Body(ranX,ranY,ranZ,ranMass,ranVelocity))
   
+def readBodies(args):
+  for arg in args:
+    b = [float(x) for x in arg.split()]
+    v = vector.Vector(b[4], b[5], b[6])
+    bodyArray.append(body.Body(b[0], b[1], b[2], b[3], v))
+
 def simulateFrame():  
   forces = [x.totalForceOn(bodyArray) for x in bodyArray] # Force on each body
   for i in xrange(len(bodyArray)):
@@ -110,7 +107,12 @@ def simulate_test():
   return
 
 if __name__ == '__main__':
-  generateBodies()
+  print sys.argv
+  if len(sys.argv) < 2:
+    generateRandomBodies()
+  else:
+    readBodies(sys.stdin.readlines())
+
   glutInit()
   glutInitWindowSize(1000,1000)
   glutCreateWindow("Force-Over-Acceleration")
