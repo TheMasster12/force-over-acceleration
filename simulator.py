@@ -24,8 +24,8 @@ bodyArray = []
 def generateBodies():
   for x in xrange(NUM_BODIES):
     ranX = random.random() * DIM_X - (DIM_X / 2)
-    ranY = random.random() * DIM_Y - (DIM_X / 2)
-    ranZ = random.random() * DIM_Z - (DIM_X / 2)
+    ranY = random.random() * DIM_Y - (DIM_Y / 2)
+    ranZ = random.random() * DIM_Z - (DIM_Z / 2)
     ranMass = random.uniform(MASS_MIN,MASS_MAX)
     
     '''
