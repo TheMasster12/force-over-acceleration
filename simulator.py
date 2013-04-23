@@ -49,7 +49,6 @@ def readBodies(args):
 
 def simulateFrame(): 
   global bodyArray,avgFrameTime
-  print(avgFrameTime)
   forces = [x.totalForceOn(bodyArray) for x in bodyArray]
   for i in xrange(len(bodyArray)):
     bodyArray[i].move(forces[i],avgFrameTime)
@@ -91,8 +90,8 @@ def displayFun():
   if frameCount % 10 == 0:
     lastTenFramesTime = int(round(time.time() * 1000.0)) - frameTimeHolder
     avgFrameTime = lastTenFramesTime / 10000.0
-    print(avgFrameTime)
-    print(1.0 / avgFrameTime)
+    print("Framerate: " + str(1.0/avgFrameTime) + "fps")
+    print("AvgFrameTime: " + str(avgFrameTime) + "s\n")
     frameTimeHolder = int(round(time.time() * 1000.0)) 
 
 def refreshBodyArray():
