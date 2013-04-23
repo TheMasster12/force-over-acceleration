@@ -24,6 +24,9 @@ avgFrameTime = 0
 dispTime = 0
 showData = True
 
+startTime = time.time()
+totalTime = 0
+
 def generateRandomBodies():
   global bodyArray
   for x in xrange(NUM_BODIES):
@@ -75,7 +78,7 @@ def initFun():
   gluLookAt(0.0, 0.0, CAM_DISTANCE, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
 
 def displayFun():
-  global bodyArray,frameCount,frameTimeHolder,avgFrameTime,dispTime
+  global frameCount,frameTimeHolder,avgFrameTime,dispTime
   simulateFrame()
   glClear(GL_COLOR_BUFFER_BIT)
 
@@ -92,16 +95,23 @@ def displayFun():
   if showData and dispTime != 0:
     fpsStr = "Framerate: " + str(1.0/dispTime) + " fps"
     avgStr = "Average  : " + str(dispTime) + " s"
+    bodStr = "Bodies   : " + str(len(bodyArray))
+    timStr = "Time     : " + str(int(round(time.time() - startTime))) + " s"
     glColor3f(1.0, 0.0, 0.0)
     glRasterPos2f(-DIM_X * .80, DIM_Y * .80)
     glutBitmapString(GLUT_BITMAP_9_BY_15, fpsStr)
     glRasterPos2f(-DIM_X * .80, DIM_Y * .80 - 100)
     glutBitmapString(GLUT_BITMAP_9_BY_15, avgStr)
+    glRasterPos2f(-DIM_X * .80, DIM_Y * .80 - 200)
+    glutBitmapString(GLUT_BITMAP_9_BY_15, bodStr)
+    glRasterPos2f(-DIM_X * .80, DIM_Y * .80 - 300)
+    glutBitmapString(GLUT_BITMAP_9_BY_15, timStr)
 
   glFlush() # Finish all drawing before this line
 
   # Update render data
   frameCount += 1
+
   if frameCount % 10 == 0:
     lastTenFramesTime = int(round(time.time() * 1000.0)) - frameTimeHolder
     avgFrameTime = lastTenFramesTime / 10000.0
