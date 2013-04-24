@@ -22,6 +22,7 @@ frameCount = 0
 frameTimeHolder = int(round(time.time() * 1000))
 avgFrameTime = 0
 showData = True
+isPaused = False
 startTime = time.time()
 argHolder = [] 
 rho = max([DIM_X, DIM_Y, DIM_Z]) * 1.5
@@ -60,9 +61,10 @@ def readBodies(args):
     bodyArray.append(body.Body(b[0], b[1], b[2], b[3], v))
 
 def simulateFrame(): 
-  forces = [x.totalForceOn(bodyArray) for x in bodyArray]
-  for i in xrange(len(bodyArray)):
-    bodyArray[i].move(forces[i],avgFrameTime)
+  if not isPaused:
+    forces = [x.totalForceOn(bodyArray) for x in bodyArray]
+    for i in xrange(len(bodyArray)):
+      bodyArray[i].move(forces[i],avgFrameTime)
 
 def barycenter():
   vs = [vector.Vector(b.x,b.y,b.z).scale(b.mass) for b in bodyArray]
@@ -172,7 +174,8 @@ def refreshBodyArray():
     readBodies(argHolder)
 
 def handleKeypress(key,x,y):
-  global showData, startTime, frameCount, avgFrameTime, frameTimeHolder
+  global startTime, frameCount, avgFrameTime, frameTimeHolder
+  global showData, isPaused
   global rho, phi, theta
 
   if key == 'q':
@@ -195,6 +198,9 @@ def handleKeypress(key,x,y):
   if key == 'f':
     showData = not showData
 
+  if key == 'p':
+    isPaused = not isPaused
+
   if key == 'n':
     addRandomBody()
 
@@ -202,7 +208,7 @@ def handleKeypress(key,x,y):
     removeBody()
 
 def handleSpecial(key,x,y):
-  global rho, phi, theta
+  global phi, theta
   MOVE_SPEED = .03
 
   if key == GLUT_KEY_UP:
@@ -220,7 +226,7 @@ def handleSpecial(key,x,y):
     theta += MOVE_SPEED
 
 def handleMouse(button, state, x, y):
-  global rho, phi, theta
+  global rho
 
   # Uncomment lines below to play with zooming
   if button == 3:
