@@ -6,6 +6,8 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 
+PI = math.pi
+
 NUM_BODIES = 100
 DIM_X = 2000
 DIM_Y = 2000
@@ -15,9 +17,6 @@ MASS_MAX = 1e16
 VELOCITY_MIN = -1e4 
 VELOCITY_MAX = 1e4
 
-CAM_DISTANCE = max([DIM_X,DIM_Y,DIM_Z]) * 1.5
-initialCameraDistance = CAM_DISTANCE
-
 bodyArray = []
 frameCount = 0
 frameTimeHolder = int(round(time.time() * 1000))
@@ -25,6 +24,9 @@ avgFrameTime = 0
 showData = True
 startTime = time.time()
 argHolder = [] 
+rho = max([DIM_X, DIM_Y, DIM_Z]) * 1.5
+theta = 0.0
+phi = PI / 2
 
 def generateRandomBodies():
   for x in xrange(NUM_BODIES):
@@ -80,14 +82,17 @@ def initFun():
   # First, load up the perspective.
   glMatrixMode(GL_PROJECTION)
   glLoadIdentity()
-  gluPerspective(60.0, 1.0, 0.1, CAM_DISTANCE * 30)
+  gluPerspective(60.0, 1.0, 0.1, rho * 30)
  
   orientCamera()
 
 def orientCamera():
   glMatrixMode(GL_MODELVIEW)
   glLoadIdentity()
-  gluLookAt(0.0, 0.0, CAM_DISTANCE, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
+  x = rho * math.sin(phi) * math.sin(theta)
+  y = rho * math.cos(phi) 
+  z = rho * math.sin(phi) * math.cos(theta)
+  gluLookAt(x, y, z, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
 
 def begin2D():
   glMatrixMode(GL_PROJECTION)
@@ -168,7 +173,7 @@ def refreshBodyArray():
 
 def handleKeypress(key,x,y):
   global showData, startTime, frameCount, avgFrameTime, frameTimeHolder
-  global CAM_DISTANCE
+  global rho, phi, theta
 
   if key == 'q':
     sys.exit(0)
@@ -180,7 +185,9 @@ def handleKeypress(key,x,y):
     startTime = time.time()
 
     # Uncomment to play with zooming
-    CAM_DISTANCE = initialCameraDistance
+    rho = max([DIM_X, DIM_Y, DIM_Z]) * 1.5
+    theta = 0.0
+    phi = PI / 2
     orientCamera()
 
     refreshBodyArray()
@@ -194,17 +201,35 @@ def handleKeypress(key,x,y):
   if key == 'd':
     removeBody()
 
+def handleSpecial(key,x,y):
+  global rho, phi, theta
+  MOVE_SPEED = .03
+
+  if key == GLUT_KEY_UP:
+    if phi > MOVE_SPEED:
+      phi -= MOVE_SPEED
+
+  if key == GLUT_KEY_DOWN:
+    if phi < PI-MOVE_SPEED:
+      phi += MOVE_SPEED
+
+  if key == GLUT_KEY_LEFT:
+    theta -= MOVE_SPEED
+
+  if key == GLUT_KEY_RIGHT:
+    theta += MOVE_SPEED
+
 def handleMouse(button, state, x, y):
-  global CAM_DISTANCE
+  global rho, phi, theta
 
   # Uncomment lines below to play with zooming
   if button == 3:
     if state == GLUT_DOWN:
-      if CAM_DISTANCE > 200: CAM_DISTANCE -= 200
+      if rho > 200: rho -= 200
       orientCamera()
   if button == 4:
     if state == GLUT_DOWN:
-      CAM_DISTANCE += 200
+      rho += 200
       orientCamera()
 
 if __name__ == '__main__':
@@ -214,6 +239,7 @@ if __name__ == '__main__':
   glutCreateWindow("Force-Over-Acceleration")
   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB)
   glutKeyboardFunc(handleKeypress)
+  glutSpecialFunc(handleSpecial)
   glutMouseFunc(handleMouse)
   glutDisplayFunc(display)
   glutIdleFunc(display)
