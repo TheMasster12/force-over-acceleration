@@ -47,7 +47,8 @@ def addRandomBody():
 
 def removeBody():
   global bodyArray
-  del bodyArray[random.randint(0,len(bodyArray) - 1)]
+  if len(bodyArray) > 0:
+    del bodyArray[random.randint(0,len(bodyArray) - 1)]
 
 def readBodies(args):
   global bodyArray
@@ -120,7 +121,10 @@ def displayData():
       avgStr = "Average  : " + str(avgFrameTime) + " s"
     bodStr = "Bodies   : " + str(len(bodyArray))
     timStr = "Time     : " + str(int(round(time.time() - startTime))) + " s"
-    cenStr = "Center   : " + str(barycenter())
+    if len(bodyArray) < 1:
+      cenStr = "Center   : N/A"
+    else:
+      cenStr = "Center   : " + str(barycenter())
 
     begin2D()
     glColor3f(1.0, 0.0, 0.0)
