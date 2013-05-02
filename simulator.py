@@ -14,7 +14,7 @@ DIM_Y = 2000
 DIM_Z = 2000
 MASS_MIN = 1e14
 MASS_MAX = 1e16
-VELOCITY_MIN = -1e4 
+VELOCITY_MIN = -1e4
 VELOCITY_MAX = 1e4
 
 bodyArray = []
@@ -24,7 +24,7 @@ avgFrameTime = 0
 showData = True
 isPaused = False
 startTime = time.time()
-argHolder = [] 
+argHolder = []
 rho = max([DIM_X, DIM_Y, DIM_Z]) * 1.5
 theta = 0.0
 phi = PI / 2
@@ -224,6 +224,8 @@ def handleSpecial(key,x,y):
 
   if key == GLUT_KEY_RIGHT:
     theta += MOVE_SPEED
+
+  orientCamera()
 
 def handleMouse(button, state, x, y):
   global rho
