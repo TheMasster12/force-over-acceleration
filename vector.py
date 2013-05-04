@@ -2,6 +2,9 @@ import math
 import body
 
 class Vector(object):
+  """
+  Vector encapsulates a vector which has x,y,z coordinates
+  """
 
   def __init__(self,x,y,z):
     self.x = x
@@ -26,15 +29,21 @@ class Vector(object):
     return math.sqrt(self.x*self.x + self.y*self.y + self.z*self.z)
   
   def scale(self,c):
+    """
+    Scales self by the scalar c
+    """
     self.x *= c
     self.y *= c
     self.z *= c
     return self
   
   def normalize(self):
-    self.x *= self.length()
-    self.y *= self.length()
-    self.z *= self.length()
+    """
+    Alters self so that it has length 1
+    """
+    self.x /= self.length()
+    self.y /= self.length()
+    self.z /= self.length()
     return self
 
 def zero():
@@ -43,10 +52,15 @@ def zero():
 def toVector(b):
   return Vector(b.x, b.y, b.z)
 
-# Adds vectors v1 and v2
 def add(v1,v2):
+  """
+  Add vectors v1 and v2
+  """
   return Vector(v1.x+v2.x, v1.y+v2.y, v1.z+v2.z)
 
 # Dot product of v1 and v2
 def dotprod(v1,v2):
+  """
+  Dot product of vectors v1 and v2
+  """
   return v1.x*v2.x + v1.y*v2.y + v1.z*v2.z

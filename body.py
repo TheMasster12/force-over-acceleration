@@ -2,6 +2,12 @@ import vector
 
 #This class will represent a point-particle and all the goodness therein
 class Body(object):
+  """
+  Body encapsulates a body in space, which has attributes:
+  position vector: <x,y,z>
+  mass: m
+  velocity vector: v
+  """
 
   def __init__(self,x,y,z,m,v):
     self.x = x
@@ -28,8 +34,11 @@ class Body(object):
   def __ne__(self,other):
     return not self.__eq__(other)
   
-  # Returns the force on self by other
   def forceOn(self,other):
+    """
+    Returns the force on self by other as a vector in the direction
+    self --> other
+    """
     G = 6.674e-11
     r = self.vectorTo(other)
     d = r.length()
@@ -37,6 +46,10 @@ class Body(object):
     return r.scale(F)
   
   def totalForceOn(self, bodies):
+    """
+    Calculates the total force on self from all bodies in bodies except for 
+    self
+    """
     F = vector.zero()
     for b in bodies:
       if b != self:

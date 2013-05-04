@@ -17,8 +17,8 @@ MASS_MAX = 1e16
 VELOCITY_MIN = -1e4
 VELOCITY_MAX = 1e4
 
-bodyArray = []
-frameCount = 0
+bodyArray = [] # The list of all bodies currently in the universe
+frameCount = 0 # Number of frames so far
 frameTimeHolder = int(round(time.time() * 1000))
 avgFrameTime = 0
 showData = True
@@ -30,10 +30,12 @@ theta = 0.0
 phi = PI / 2
 
 def generateRandomBodies():
+  """Generates NUM_BODIES new random bodies."""
   for x in xrange(NUM_BODIES):
     addRandomBody()
 
 def addRandomBody():
+  """Adds one random body to the bodyArray."""
   global bodyArray
   ranX = random.random() * DIM_X - (DIM_X / 2)
   ranY = random.random() * DIM_Y - (DIM_Y / 2)
@@ -49,11 +51,13 @@ def addRandomBody():
   bodyArray.append(body.Body(ranX,ranY,ranZ,ranMass,ranVelocity))
 
 def removeBody():
+  """Randomly selects a body and removes it from the bodyArray."""
   global bodyArray
   if len(bodyArray) > 0:
     del bodyArray[random.randint(0,len(bodyArray) - 1)]
 
 def readBodies(args):
+  """Goes through args and reads each body into bodyArray."""
   global bodyArray
   for arg in args:
     b = [float(x) for x in arg.split()] # List of numbers that identify body
@@ -61,18 +65,21 @@ def readBodies(args):
     bodyArray.append(body.Body(b[0], b[1], b[2], b[3], v))
 
 def simulateFrame(): 
+  """Takes one step in the simulation if it isn't paused."""
   if not isPaused:
     forces = [x.totalForceOn(bodyArray) for x in bodyArray]
     for i in xrange(len(bodyArray)):
       bodyArray[i].move(forces[i],avgFrameTime)
 
 def barycenter():
+  """Finds the center of mass of all the bodies in the universe."""
   vs = [vector.Vector(b.x,b.y,b.z).scale(b.mass) for b in bodyArray]
   totalMass = sum([b.mass for b in bodyArray])
   x = reduce(vector.add, vs)
   return x.scale(1.0/totalMass)
 
 def initFun():
+  """Initializes all OpenGL things."""
   glClearColor(0.0,0.0,0.0,0.0)
 
   # Make things look nice
@@ -89,6 +96,7 @@ def initFun():
   orientCamera()
 
 def orientCamera():
+  """Moves and turns the camera based on spherical coordinates."""
   glMatrixMode(GL_MODELVIEW)
   glLoadIdentity()
   x = rho * math.sin(phi) * math.sin(theta)
@@ -97,6 +105,7 @@ def orientCamera():
   gluLookAt(x, y, z, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
 
 def begin2D():
+  """Allow for drawing on the screen instead of in the universe."""
   glMatrixMode(GL_PROJECTION)
   glPushMatrix()
   glLoadIdentity()
@@ -105,11 +114,13 @@ def begin2D():
   glLoadIdentity()
 
 def end2D():
+  """Go back to 3D mode."""
   glMatrixMode(GL_PROJECTION)
   glPopMatrix()
   orientCamera()
 
 def displayBodies():
+  """Render the bodies."""
   glMatrixMode(GL_MODELVIEW)
   glColor3f(1.0, 1.0, 1.0)
   for b in bodyArray:
@@ -119,6 +130,7 @@ def displayBodies():
     glPopMatrix()
 
 def displayData():
+  """Render data, if showData is set to True."""
   if showData:
     if avgFrameTime == 0:
       fpsStr = "Framerate: N/A"
@@ -148,6 +160,7 @@ def displayData():
     end2D()
 
 def display():
+  """Frame-by-frame display function."""
   global frameCount,frameTimeHolder,avgFrameTime
   simulateFrame()
   glClear(GL_COLOR_BUFFER_BIT)
@@ -165,6 +178,7 @@ def display():
     frameTimeHolder = int(round(time.time() * 1000.0)) 
 
 def refreshBodyArray():
+  """Resets bodyArray to initial conditions."""
   global bodyArray
   bodyArray = []
 
