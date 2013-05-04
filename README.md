@@ -14,3 +14,7 @@ Separate bodies with newlines and save in a file.
 
 Then, to test, simply use the command
 `python simulator.py test < file.test`
+
+Documentation
+-------------
+All documentation is in HTML in the `doc/` folder. If you make changes, please document your code and run `docgen.sh` to update the documentation for all files. 
