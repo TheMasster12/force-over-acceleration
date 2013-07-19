@@ -1,70 +1,46 @@
 import vector
 
-#This class will represent a point-particle and all the goodness therein
-class Body(object):
+def equals(body,other):
+  return (body[0] == other[0] and body[1] == other[1] 
+    and body[2] == other[2] and body[3] == other[3] 
+    and body[4] == other[4] and body[5] == other[5] 
+    and body[6] == other[6])
+
+def forceOn(body,other):
   """
-  Body encapsulates a body in space, which has attributes:
-  position vector: <x,y,z>
-  mass: m
-  velocity vector: v
+  Returns the force on self by other as a vector in the direction
+  self --> other
   """
-
-  def __init__(self,x,y,z,m,v):
-    self.x = x
-    self.y = y
-    self.z = z
-    self.mass = m
-    self.velocity = v # should be a Vector
-
-  def __str__(self):
-    return ("Body at:(" + 
-            str(self.x) + ", " + 
-            str(self.y) + ", " + 
-            str(self.z) + ")" + 
-            " with mass: " + str(self.mass))
-
-  def __eq__(self,other):
-    return (isinstance (other, self.__class__) and
-            self.x == other.x and
-            self.y == other.y and
-            self.z == other.z and
-            self.mass == other.mass and
-            self.velocity == other.velocity)
-
-  def __ne__(self,other):
-    return not self.__eq__(other)
+  G = 6.674e-11
+  r = vectorTo(body,other)
+  d = r.length()
+  F = G * body[3] * other[3] / (d*d*d)
+  return r.scale(F)
   
-  def forceOn(self,other):
-    """
-    Returns the force on self by other as a vector in the direction
-    self --> other
-    """
-    G = 6.674e-11
-    r = self.vectorTo(other)
-    d = r.length()
-    F = G * self.mass * other.mass / (d*d*d)
-    return r.scale(F)
-  
-  def totalForceOn(self, bodies):
-    """
-    Calculates the total force on self from all bodies in bodies except for 
-    self
-    """
-    F = vector.zero()
-    for b in bodies:
-      if b != self:
-        F = vector.add(F, self.forceOn(b))
-    return F
+def totalForceOn(body, bodies):
+  """
+  Calculates the total force on self from all bodies in bodies except for 
+  self
+  """
+  F = vector.zero()
+  for row in bodies:
+    if not equals(body,row):
+      F = vector.add(F, forceOn(body, row))
+  return F
 
-  def move(self, force, time):
-    deltaV = force.scale(1.0/self.mass)
-    self.velocity = vector.add(self.velocity, deltaV)
-    self.x += (self.velocity.x * time)
-    self.y += (self.velocity.y * time)
-    self.z += (self.velocity.z * time)
+def move(body, force, time):
+  deltaV = force.scale(1.0/body[3])
+  V = vector.add(vector.Vector(body[4],body[5],body[6]), deltaV)
+  body[4] = V.x
+  body[5] = V.y
+  body[6] = V.z
 
-  def vectorTo(self,other):
-    return vector.Vector(other.x-self.x, other.y-self.y, other.z-self.z)
+  body[0] += (body[4] * time)
+  body[1] += (body[5] * time)
+  body[2] += (body[6] * time)
+
+def vectorTo(body,other):
+    return vector.Vector(other[0]-body[0], other[1]-body[1], other[2]-body[2])
 
 def distance(p1,p2):
   x = p1.x - p2.x
