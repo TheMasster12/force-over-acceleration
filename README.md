@@ -21,4 +21,8 @@ All documentation is in HTML in the `doc/` folder. If you make changes, please d
 
 Installation
 ------------
-NumPy/SciPy - sudo apt-get install python-numpy python-scipy python-matplotlib ipython ipython-notebook python-pandas python-sympy python-nose
+You will need to install the following packages:
+
+ * NumPy/SciPy - sudo apt-get install python-numpy python-scipy python-matplotlib ipython ipython-notebook python-pandas python-sympy python-nose
+ * PyOpenGl
+ * freeglut
