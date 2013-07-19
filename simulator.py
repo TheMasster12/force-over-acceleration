@@ -2,6 +2,7 @@
 import random,math,time
 import body,vector
 
+from numpy import *
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
@@ -17,7 +18,7 @@ MASS_MAX = 1e16
 VELOCITY_MIN = -1e4
 VELOCITY_MAX = 1e4
 
-bodyArray = [] # The list of all bodies currently in the universe
+bodyArray = array([]) # The list of all bodies currently in the universe
 frameCount = 0 # Number of frames so far
 frameTimeHolder = int(round(time.time() * 1000))
 avgFrameTime = 0
@@ -31,31 +32,30 @@ phi = PI / 2
 
 def generateRandomBodies():
   """Generates NUM_BODIES new random bodies."""
-  for x in xrange(NUM_BODIES):
-    addRandomBody()
-
-def addRandomBody():
-  """Adds one random body to the bodyArray."""
   global bodyArray
+  for x in range(0,bodyArray.shape[0]):
+    bodyArray[x] = getRandomBody()
+
+def getRandomBody():
+  """Returns a random body."""
   ranX = random.random() * DIM_X - (DIM_X / 2)
   ranY = random.random() * DIM_Y - (DIM_Y / 2)
   ranZ = random.random() * DIM_Z - (DIM_Z / 2)
   ranMass = random.uniform(MASS_MIN,MASS_MAX)
-  '''
+  
   ranVx = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
   ranVy = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
   ranVz = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
-  ranVelocity = vector.Vector(ranVx,ranVy,ranVz)
-  '''
-  ranVelocity = vector.zero()
-  bodyArray.append(body.Body(ranX,ranY,ranZ,ranMass,ranVelocity))
+
+  return [ranX,ranY,ranZ,ranMass,ranVx,ranVy,ranVz]
 
 def removeBody():
   """Randomly selects a body and removes it from the bodyArray."""
   global bodyArray
   if len(bodyArray) > 0:
-    del bodyArray[random.randint(0,len(bodyArray) - 1)]
+    del bodyArray[random.randint(0,bodyArray.shape[0] - 1)]
 
+'''
 def readBodies(args):
   """Goes through args and reads each body into bodyArray."""
   global bodyArray
@@ -63,6 +63,7 @@ def readBodies(args):
     b = [float(x) for x in arg.split()] # List of numbers that identify body
     v = vector.Vector(b[4], b[5], b[6])
     bodyArray.append(body.Body(b[0], b[1], b[2], b[3], v))
+'''
 
 def simulateFrame(): 
   """Takes one step in the simulation if it isn't paused."""
@@ -123,10 +124,10 @@ def displayBodies():
   """Render the bodies."""
   glMatrixMode(GL_MODELVIEW)
   glColor3f(1.0, 1.0, 1.0)
-  for b in bodyArray:
+  for row in bodyArray:
     glPushMatrix()
-    glTranslate(b.x,b.y,b.z)
-    glutSolidSphere(math.log(b.mass * 1e-14, 2) * 2, 20,20)
+    glTranslate(row[0],row[1],row[2])
+    glutSolidSphere(math.log(row[4] * 1e-14, 2) * 2, 20,20)
     glPopMatrix()
 
 def displayData():
@@ -140,7 +141,7 @@ def displayData():
       avgStr = "Average  : " + str(avgFrameTime) + " s"
     bodStr = "Bodies   : " + str(len(bodyArray))
     timStr = "Time     : " + str(int(round(time.time() - startTime))) + " s"
-    if len(bodyArray) < 1:
+    if bodyArray.shape[0] < 1:
       cenStr = "Center   : N/A"
     else:
       cenStr = "Center   : " + str(barycenter())
@@ -180,7 +181,7 @@ def display():
 def refreshBodyArray():
   """Resets bodyArray to initial conditions."""
   global bodyArray
-  bodyArray = []
+  bodyArray = zeros((NUM_BODIES,7))
 
   if len(sys.argv) < 2:
     generateRandomBodies()
@@ -267,8 +268,10 @@ if __name__ == '__main__':
   glutIdleFunc(display)
 
   #Initialize everything else
-  if len(sys.argv) >= 2:
-    argHolder = sys.stdin.readlines()
+  #if len(sys.argv) >= 2:
+  #  argHolder = sys.stdin.readlines()
   refreshBodyArray()
-  initFun()
-  glutMainLoop()
+  print bodyArray
+  print type(bodyArray)
+  #initFun()
+  #glutMainLoop()

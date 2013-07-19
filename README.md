@@ -18,3 +18,7 @@ Then, to test, simply use the command
 Documentation
 -------------
 All documentation is in HTML in the `doc/` folder. If you make changes, please document your code and run `docgen.sh` to update the documentation for all files. 
+
+Installation
+------------
+NumPy/SciPy - sudo apt-get install python-numpy python-scipy python-matplotlib ipython ipython-notebook python-pandas python-sympy python-nose
