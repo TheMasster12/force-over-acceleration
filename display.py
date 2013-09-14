@@ -82,7 +82,7 @@ class Display(object):
       else:
         cenStr = "Center   : " + str(self.simulator.barycenter())
 
-      begin2D()
+      self.begin2D()
       glColor3f(1.0, 0.0, 0.0)
       glRasterPos2f(20,100)
       glutBitmapString(GLUT_BITMAP_9_BY_15, cenStr)
@@ -94,7 +94,7 @@ class Display(object):
       glutBitmapString(GLUT_BITMAP_9_BY_15, bodStr)
       glRasterPos2f(20,20)
       glutBitmapString(GLUT_BITMAP_9_BY_15, timStr)
-      end2D()
+      self.end2D()
 
   def display(self):
     """Frame-by-frame display function."""
@@ -113,17 +113,17 @@ class Display(object):
       self.avgFrameTime = lastTenFramesTime / 10000.0
       self.frameTimeHolder = int(round(time.time() * 1000.0)) 
 
-def begin2D():
-  """Allow for drawing on the screen instead of in the universe."""
-  glMatrixMode(GL_PROJECTION)
-  glPushMatrix()
-  glLoadIdentity()
-  glOrtho(0, 1000, 0, 1000, 0, 1)
-  glMatrixMode(GL_MODELVIEW)
-  glLoadIdentity()
+  def begin2D(self):
+    """Allow for drawing on the screen instead of in the universe."""
+    glMatrixMode(GL_PROJECTION)
+    glPushMatrix()
+    glLoadIdentity()
+    glOrtho(0, 1000, 0, 1000, 0, 1)
+    glMatrixMode(GL_MODELVIEW)
+    glLoadIdentity()
 
-def end2D():
-  """Go back to 3D mode."""
-  glMatrixMode(GL_PROJECTION)
-  glPopMatrix()
-  self.orientCamera()
+  def end2D(self):
+    """Go back to 3D mode."""
+    glMatrixMode(GL_PROJECTION)
+    glPopMatrix()
+    self.orientCamera()

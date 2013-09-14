@@ -7,6 +7,6 @@ if __name__ == '__main__':
   if len(sys.argv) >= 2:
     sim.argHolder = sys.stdin.readlines()
 
-  sim.refreshBodyArray()
-  sim.restartSimulation()
-  sim.renderEngine.start()
+  #sim.refreshBodyArray()
+  #sim.renderEngine.start()
+  #sim.restartSimulation()
