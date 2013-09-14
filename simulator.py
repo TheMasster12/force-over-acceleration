@@ -2,10 +2,13 @@
 import sys
 import random, math, time
 import body, display
+from datetime import datetime
 
 from numpy import *
 
-NUM_BODIES = 100
+from OpenGL.GLUT import *
+
+NUM_BODIES = 50
 DIM_X = 2000
 DIM_Y = 2000
 DIM_Z = 2000
@@ -37,10 +40,14 @@ class Simulator(object):
         
     def simulateFrame(self): 
         """Takes one step in the simulation if it isn't paused."""
+        start1 = datetime.now()
         if not self.renderEngine.isPaused:
             forces = [body.totalForceOn(row,self.bodyArray) for row in self.bodyArray]
             for i in xrange(self.bodyArray.shape[0]):
                 body.move(self.bodyArray[i],forces[i],self.renderEngine.avgFrameTime)
+        end = datetime.now()
+        runTime1 = (end - start1).total_seconds()
+        #print str(runTime1)
         
     def refreshBodyArray(self):
         """Resets bodyArray to initial conditions."""
@@ -73,9 +80,9 @@ class Simulator(object):
         
     def getRandomBody(self):
         """Returns a random body."""
-        ranX = random.random() * DIM_X - (DIM_X / 2)
-        ranY = random.random() * DIM_Y - (DIM_Y / 2)
-        ranZ = random.random() * DIM_Z - (DIM_Z / 2)
+        ranX = (random.random() * DIM_X - (DIM_X / 2)) / 4
+        ranY = (random.random() * DIM_Y - (DIM_Y / 2)) / 4
+        ranZ = (random.random() * DIM_Z - (DIM_Z / 2)) / 4
         ranMass = random.uniform(MASS_MIN, MASS_MAX)
         
         #ranVx = random.uniform(VELOCITY_MIN,VELOCITY_MAX)
@@ -117,6 +124,7 @@ class Simulator(object):
         MOVE_SPEED = .03
 
         if key == GLUT_KEY_UP:
+#            print 'hi'
             if self.renderEngine.phi > MOVE_SPEED:
                 self.renderEngine.phi -= MOVE_SPEED
 

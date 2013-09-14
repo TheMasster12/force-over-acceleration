@@ -77,10 +77,10 @@ class Display(object):
                 avgStr = "Average    : " + str(self.avgFrameTime) + " s"
             bodStr = "Bodies     : " + str(self.simulator.bodyArray.shape[0])
             timStr = "Time         : " + str(int(round(time.time() - self.startTime))) + " s"
-            if self.simulator.bodyArray.shape[0] < 1:
-                cenStr = "Center     : N/A"
-            else:
-                cenStr = "Center     : " + str(self.simulator.barycenter())
+#            if self.simulator.bodyArray.shape[0] < 1:
+#                cenStr = "Center     : N/A"
+#            else:
+#                cenStr = "Center     : " + str(self.simulator.barycenter())
 
             self.begin2D()
             glColor3f(1.0, 0.0, 0.0)
@@ -99,14 +99,14 @@ class Display(object):
     def display(self):
         """Frame-by-frame display function."""
         self.simulator.simulateFrame()
-        #glClear(GL_COLOR_BUFFER_BIT)
+        glClear(GL_COLOR_BUFFER_BIT)
 
-        #self.displayBodies() # Render bodies
+        self.displayBodies() # Render bodies
         #self.displayData() # Show render data on screen
         
-        #glFlush() # Finish all drawing before this line
+        glFlush() # Finish all drawing before this line
 
-        # Update render data
+#         Update render data
         self.frameCount += 1
         if self.frameCount % 10 == 0:
             lastTenFramesTime = int(round(time.time() * 1000.0)) - self.frameTimeHolder
