@@ -77,10 +77,11 @@ class Display(object):
                 avgStr = "Average    : " + str(self.avgFrameTime) + " s"
             bodStr = "Bodies     : " + str(self.simulator.bodyArray.shape[0])
             timStr = "Time         : " + str(int(round(time.time() - self.startTime))) + " s"
-#            if self.simulator.bodyArray.shape[0] < 1:
-#                cenStr = "Center     : N/A"
-#            else:
-#                cenStr = "Center     : " + str(self.simulator.barycenter())
+            #if self.simulator.bodyArray.shape[0] < 1:
+            #    cenStr = "Center     : N/A"
+            #else:
+            #    cenStr = "Center     : " + str(self.simulator.barycenter())
+
 
             self.begin2D()
             glColor3f(1.0, 0.0, 0.0)
