@@ -1,4 +1,4 @@
-import time
+import time, math
 
 from OpenGL.GL import *
 from OpenGL.GLUT import *
@@ -42,7 +42,7 @@ class Display(object):
     # First, load up the perspective.
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
-    gluPerspective(60.0, 1.0, 0.1, rho * 30)
+    gluPerspective(60.0, 1.0, 0.1, self.rho * 30)
    
     self.orientCamera()
     glutMainLoop()
@@ -113,8 +113,6 @@ class Display(object):
       self.avgFrameTime = lastTenFramesTime / 10000.0
       self.frameTimeHolder = int(round(time.time() * 1000.0)) 
 
-
-
 def begin2D():
   """Allow for drawing on the screen instead of in the universe."""
   glMatrixMode(GL_PROJECTION)
@@ -128,4 +126,4 @@ def end2D():
   """Go back to 3D mode."""
   glMatrixMode(GL_PROJECTION)
   glPopMatrix()
-  orientCamera()
+  self.orientCamera()

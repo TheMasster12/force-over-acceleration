@@ -1,5 +1,6 @@
 #This class will be the backbone of the whole simulation.
-import random,math
+import sys
+import random,math, time
 import body,vector,display
 
 from numpy import *
@@ -125,7 +126,7 @@ class Simulator(object):
         self.renderEngine.rho += 200
         self.renderEngine.orientCamera()
 
-  def getRandomBody():
+  def getRandomBody(self):
     """Returns a random body."""
     ranX = random.random() * DIM_X - (DIM_X / 2)
     ranY = random.random() * DIM_Y - (DIM_Y / 2)
