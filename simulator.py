@@ -2,21 +2,18 @@
 import sys
 import random, math, time
 import body, display
-from datetime import datetime
 
 from numpy import *
-
 from OpenGL.GLUT import *
 
 NUM_BODIES = 50
-DIM_X = 2000
-DIM_Y = 2000
-DIM_Z = 2000
-MASS_MIN = 1e14
-MASS_MAX = 1e16
+DIM_X = 4e8
+DIM_Y = 1e8
+DIM_Z = 4e8
+MASS_MIN = 1e30
+MASS_MAX = 4e30
 VELOCITY_MIN = -1e4
 VELOCITY_MAX = 1e4
-PI = math.pi
 
 class Simulator(object):
 
@@ -33,21 +30,17 @@ class Simulator(object):
 
         self.renderEngine.rho = max([DIM_X, DIM_Y, DIM_Z]) * 1.5
         self.renderEngine.theta = 0.0
-        self.renderEngine.phi = PI / 2
+        self.renderEngine.phi = math.pi / 2
         self.renderEngine.orientCamera()
 
         self.refreshBodyArray()
         
     def simulateFrame(self): 
         """Takes one step in the simulation if it isn't paused."""
-        start1 = datetime.now()
         if not self.renderEngine.isPaused:
             forces = [body.totalForceOn(row,self.bodyArray) for row in self.bodyArray]
             for i in xrange(self.bodyArray.shape[0]):
                 body.move(self.bodyArray[i],forces[i],self.renderEngine.avgFrameTime)
-        end = datetime.now()
-        runTime1 = (end - start1).total_seconds()
-        #print str(runTime1)
         
     def refreshBodyArray(self):
         """Resets bodyArray to initial conditions."""
@@ -56,7 +49,7 @@ class Simulator(object):
         if len(sys.argv) < 2:
             self.generateRandomBodies()
         else:
-            self.readBodies(argHolder)
+            self.readBodies(self.argHolder)
 
     def generateRandomBodies(self):
         """Generates NUM_BODIES new random bodies."""
@@ -64,7 +57,7 @@ class Simulator(object):
             self.bodyArray[x] = self.getRandomBody()
             
     def addRandomBody(self):
-        self.bodyArray = vstack([self.bodyArray, getRandomBody()])
+        self.bodyArray = vstack([self.bodyArray, self.getRandomBody()])
 
     def removeBody(self):
         """Randomly selects a body and removes it from the bodyArray."""
@@ -121,15 +114,14 @@ class Simulator(object):
             self.removeBody()
 
     def handleSpecial(self, key, x, y):
-        MOVE_SPEED = .03
+        MOVE_SPEED = .05
 
         if key == GLUT_KEY_UP:
-#            print 'hi'
             if self.renderEngine.phi > MOVE_SPEED:
                 self.renderEngine.phi -= MOVE_SPEED
 
         if key == GLUT_KEY_DOWN:
-            if self.renderEngine.phi < PI-MOVE_SPEED:
+            if self.renderEngine.phi < math.pi -MOVE_SPEED:
                 self.renderEngine.phi += MOVE_SPEED
 
         if key == GLUT_KEY_LEFT:
@@ -143,9 +135,10 @@ class Simulator(object):
     def handleMouse(self, button, state, x, y):
         if button == 3:
             if state == GLUT_DOWN:
-                if self.renderEngine.rho > 200: self.renderEngine.rho -= 200
+                if self.renderEngine.rho > 200: 
+                    self.renderEngine.rho -= 200
                 self.renderEngine.orientCamera()
         if button == 4:
             if state == GLUT_DOWN:
-                self.renderEngine.rho += 200
+                self.renderEngine.rho += 20000
                 self.renderEngine.orientCamera()

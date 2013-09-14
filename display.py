@@ -1,4 +1,4 @@
-import time, math
+import time, math, body
 
 from OpenGL.GL import *
 from OpenGL.GLUT import *
@@ -63,7 +63,7 @@ class Display(object):
         for b in self.simulator.bodyArray:
             glPushMatrix()
             glTranslate(b[0],b[1],b[2])
-            glutSolidSphere(math.log(b[3] * 1e-14, 2) * 2, 20,20)
+            glutSolidSphere(math.log(b[3] * 1e-2, 2) * 20000, 20,20)
             glPopMatrix()
 
     def displayData(self):
@@ -81,7 +81,11 @@ class Display(object):
             #    cenStr = "Center     : N/A"
             #else:
             #    cenStr = "Center     : " + str(self.simulator.barycenter())
-
+            
+            total = 0
+            for row in self.simulator.bodyArray:
+                total += body.energy(row)
+            cenStr = "Kinetic Energy: " + str(total)
 
             self.begin2D()
             glColor3f(1.0, 0.0, 0.0)
@@ -103,11 +107,11 @@ class Display(object):
         glClear(GL_COLOR_BUFFER_BIT)
 
         self.displayBodies() # Render bodies
-        #self.displayData() # Show render data on screen
+        self.displayData() # Show render data on screen
         
         glFlush() # Finish all drawing before this line
 
-#         Update render data
+        # Update render data
         self.frameCount += 1
         if self.frameCount % 10 == 0:
             lastTenFramesTime = int(round(time.time() * 1000.0)) - self.frameTimeHolder
