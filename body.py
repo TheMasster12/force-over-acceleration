@@ -14,38 +14,30 @@ def forceOn(body, other):
     self --> other
     """
     G = 6.674e-11
-    r = numpy.array([other[0]-body[0], other[1]-body[1], other[2]-body[2]])
-    d = math.sqrt(r[0]**2 + r[1]**2 + r[2]**2)
-    F = G * body[3] * other[3] / (d**3)
-    return r * F
+    d = math.sqrt((other[0] - body[0])**2 + (other[1] - body[1])**2 + (other[2] - body[2])**2)
+    f = (G * body[3] * other[3]) / (d**2)
+    return f
     
 def totalForceOn(body, bodies):
     """
     Calculates the total force on self from all bodies in bodies except for 
     self
     """
-    F = zeros(3)
+    total = zeros(3)
     for row in bodies:
         if not equals(body,row):
-            F = vector.add(F, forceOn(body, row))
-    return F
+            force = forceOn(body,row)
+            total[0] = total[0] + force[0]
+            total[1] = total[1] + force[1]
+            total[2] = total[2] + force[2]
+    return total
 
 def move(body, force, time):
-    deltaV = force.scale(1.0/body[3])
-    V = vector.add(vector.Vector(body[4],body[5],body[6]), deltaV)
-    body[4] = V.x
-    body[5] = V.y
-    body[6] = V.z
+    deltaV = force / body[3]
+    body[4] = body[4] + deltaV[0]
+    body[5] = body[5] + deltaV[1]
+    body[6] = body[6] + deltaV[2]
 
     body[0] += (body[4] * time)
     body[1] += (body[5] * time)
     body[2] += (body[6] * time)
-
-def vectorTo(body,other):
-        return vector.Vector(other[0]-body[0], other[1]-body[1], other[2]-body[2])
-
-def distance(p1,p2):
-    x = p1.x - p2.x
-    y = p1.y - p2.y
-    z = p1.z - p2.z
-    return math.sqrt (x*x + y*y + z*z)

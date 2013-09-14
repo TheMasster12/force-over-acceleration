@@ -1,7 +1,7 @@
 #This class will be the backbone of the whole simulation.
 import sys
 import random, math, time
-import body, vector, display
+import body, display
 
 from numpy import *
 
