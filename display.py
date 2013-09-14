@@ -99,12 +99,12 @@ class Display(object):
     def display(self):
         """Frame-by-frame display function."""
         self.simulator.simulateFrame()
-        glClear(GL_COLOR_BUFFER_BIT)
+        #glClear(GL_COLOR_BUFFER_BIT)
 
-        self.displayBodies() # Render bodies
-        self.displayData() # Show render data on screen
+        #self.displayBodies() # Render bodies
+        #self.displayData() # Show render data on screen
         
-        glFlush() # Finish all drawing before this line
+        #glFlush() # Finish all drawing before this line
 
         # Update render data
         self.frameCount += 1
@@ -127,4 +127,3 @@ class Display(object):
         glMatrixMode(GL_PROJECTION)
         glPopMatrix()
         self.orientCamera()
-

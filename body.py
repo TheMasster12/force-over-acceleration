@@ -1,28 +1,30 @@
-import vector
+import math
 
-def equals(body,other):
+from numpy import *
+
+def equals(body, other):
     return (body[0] == other[0] and body[1] == other[1] 
         and body[2] == other[2] and body[3] == other[3] 
         and body[4] == other[4] and body[5] == other[5] 
         and body[6] == other[6])
 
-def forceOn(body,other):
+def forceOn(body, other):
     """
     Returns the force on self by other as a vector in the direction
     self --> other
     """
     G = 6.674e-11
-    r = vectorTo(body,other)
-    d = r.length()
-    F = G * body[3] * other[3] / (d*d*d)
-    return r.scale(F)
+    r = numpy.array([other[0]-body[0], other[1]-body[1], other[2]-body[2]])
+    d = math.sqrt(r[0]**2 + r[1]**2 + r[2]**2)
+    F = G * body[3] * other[3] / (d**3)
+    return r * F
     
 def totalForceOn(body, bodies):
     """
     Calculates the total force on self from all bodies in bodies except for 
     self
     """
-    F = vector.zero()
+    F = zeros(3)
     for row in bodies:
         if not equals(body,row):
             F = vector.add(F, forceOn(body, row))
@@ -47,5 +49,3 @@ def distance(p1,p2):
     y = p1.y - p2.y
     z = p1.z - p2.z
     return math.sqrt (x*x + y*y + z*z)
-
-
